@@ -19,13 +19,11 @@ export default function FirebaseFetcher() {
     const fetchData = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "students"));
-        const studentData: Student[] = [];
-        querySnapshot.forEach((doc) => {
-          studentData.push({
-            id: doc.id,
-            ...(doc.data() as Omit<Student, "id">),
-          });
-        });
+        const studentData: Student[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          age: doc.data().age,
+        }));
         setStudents(studentData);
       } catch (error) {
         console.error("Error fetching students:", error);
